@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
+import axios from 'axios'
+import { differenceInDays } from 'date-fns'
+
 import SearchBar from 'components/SearchBar'
 
 export default function LiveSearch (props) {
@@ -10,7 +13,16 @@ export default function LiveSearch (props) {
 
   const [error, setError] = useState(false)
   const prev = useRef('')
-  console.log('prev', prev)
+
+  function showError () {
+    setSearch({
+      term: '',
+      results: [],
+      loading: false
+    })
+
+    setError(true)
+  }
 
   useEffect(() => {
     if (prev.current === '' && search.term === '') return
@@ -19,8 +31,30 @@ export default function LiveSearch (props) {
       ...prev,
       loading: true
     }))
+
     prev.current = search.term
-    console.log('search', search)
+
+    axios
+      .get(
+        `https://itunes.apple.com/search?term=${search.term}&country=CA&media=music&entity=album&attribute=artistTerm`
+      )
+      .then(response => {
+        response.data.results.sort((a, b) => {
+          return differenceInDays(
+            new Date(b.releaseDate),
+            new Date(a.releaseDate)
+          )
+        })
+
+        setSearch({
+          ...search,
+          results: response.data.results,
+          loading: false
+        })
+      })
+      .catch(error => {
+        showError()
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.term])
   return (
