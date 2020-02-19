@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import LiveSearch from 'components/LiveSearch'
+
 function App () {
-  return <h1>Hello World</h1>
+  return <LiveSearch />
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))
