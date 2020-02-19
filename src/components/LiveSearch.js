@@ -4,6 +4,7 @@ import { differenceInDays } from 'date-fns'
 
 import SearchBar from 'components/SearchBar'
 import Error from 'components/Error'
+import Results from 'components/Results'
 
 export default function LiveSearch (props) {
   const [search, setSearch] = useState({
@@ -57,6 +58,7 @@ export default function LiveSearch (props) {
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.term])
+
   return (
     <React.Fragment>
       <header className='logo'>
@@ -74,6 +76,7 @@ export default function LiveSearch (props) {
         <Error show={error} onClose={event => setError(false)}>
           The server returned an error.
         </Error>
+        <Results results={search.results} />
       </main>
     </React.Fragment>
   )
