@@ -3,6 +3,7 @@ import axios from 'axios'
 import { differenceInDays } from 'date-fns'
 
 import SearchBar from 'components/SearchBar'
+import Error from 'components/Error'
 
 export default function LiveSearch (props) {
   const [search, setSearch] = useState({
@@ -45,7 +46,6 @@ export default function LiveSearch (props) {
             new Date(a.releaseDate)
           )
         })
-
         setSearch({
           ...search,
           results: response.data.results,
@@ -70,6 +70,10 @@ export default function LiveSearch (props) {
             setSearch({ ...search, term })
           }}
         />
+
+        <Error show={error} onClose={event => setError(false)}>
+          The server returned an error.
+        </Error>
       </main>
     </React.Fragment>
   )
